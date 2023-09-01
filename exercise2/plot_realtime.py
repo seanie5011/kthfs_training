@@ -1,32 +1,36 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import time
+from matplotlib.animation import FuncAnimation
 
 # simulated realtime data function
 x = lambda t: 5 * np.sin(2 * np.pi * t)
 h = lambda t: 3 * np.pi * np.exp(-x(t))
 
 # define the timestep
-t_k = 0.1
+t_k = 0.001
 
 # initialise time and storing arrays
 t = 0
-ts = np.array([t])
-hs = np.array([h(t)])
+ts = [t]
+hs = [h(t)]
 
-# loop to increase time
-while t < 100:
-	# plot the graph
-	plt.plot(ts, hs)
+figure = plt.figure()
+line, = plt.plot(ts, hs)
 
-	# pause to both sleep for simulation
-	# and to keep graph up
-	# place before updating values to keep consistency
-	plt.pause(t_k)
+def update(frame, *fargs):
+	line.set_data(ts, hs)
+	figure.gca().relim()
+	figure.gca().autoscale_view()
 
 	# update the arrays and timestep
-	t += t_k
-	ts = np.append(ts, t)
-	hs = np.append(hs, h(t))
+	# calculate current time
+	# fargs[0] is the timestep
+	t = ts[-1] + fargs[0]
+	ts.append(t)
+	hs.append(h(t))
+
+	return line,
+
+animation = FuncAnimation(figure, update, interval=t_k * 1000, fargs=[t_k])
 
 plt.show()
