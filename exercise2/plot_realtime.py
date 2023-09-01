@@ -2,35 +2,52 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-# simulated realtime data function
-x = lambda t: 5 * np.sin(2 * np.pi * t)
-h = lambda t: 3 * np.pi * np.exp(-x(t))
+# class to handle simulated realtime data and plotting
+class RealtimePlotting():
+	def __init__(self):
+		# simulated realtime data function
+		self.x = lambda t: 5 * np.sin(2 * np.pi * t)
+		self.h = lambda t: 3 * np.pi * np.exp(-self.x(t))
 
-# define the timestep
-t_k = 0.001
+		# define the timestep
+		self.t_k = 0.1
 
-# initialise time and storing arrays
-t = 0
-ts = [t]
-hs = [h(t)]
+		# initialise time and storing arrays
+		self.ts = np.array([0])
+		self.hs = np.array([self.h(0)])
 
-figure = plt.figure()
-line, = plt.plot(ts, hs)
+		self.figure = plt.figure()
+		self.line, = plt.plot(self.ts, self.hs)
 
-def update(frame, *fargs):
-	line.set_data(ts, hs)
-	figure.gca().relim()
-	figure.gca().autoscale_view()
+	def update(self, frame):
+		"""
+		Called every frame of animation. Updates the figure and data.
+		"""
 
-	# update the arrays and timestep
-	# calculate current time
-	# fargs[0] is the timestep
-	t = ts[-1] + fargs[0]
-	ts.append(t)
-	hs.append(h(t))
+		# set line data
+		self.line.set_data(self.ts, self.hs)
+		# rescale figure
+		self.figure.gca().relim()
+		self.figure.gca().autoscale_view()
 
-	return line,
+		# calculate current time
+		t = self.ts[-1] + self.t_k
+		# update the arrays
+		self.ts = np.append(self.ts, t)
+		self.hs = np.append(self.hs, self.h(t))
 
-animation = FuncAnimation(figure, update, interval=t_k * 1000, fargs=[t_k])
+		# animation expects line
+		return self.line,
 
-plt.show()
+	def plot(self):
+		"""
+		Calls the animation for realtime plotting.
+		"""
+		# create the animation using figure and update method
+		animation = FuncAnimation(self.figure, self.update, interval=self.t_k * 1000)
+		# requires show call
+		plt.show()
+
+if __name__ == "__main__":
+	plot = RealtimePlotting()
+	plot.plot()
