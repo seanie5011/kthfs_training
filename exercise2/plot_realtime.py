@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import customtkinter as ctk
+from settings import *
 
 # set to dark appearance mode
 # to use system default, set to 'system'
@@ -65,7 +66,7 @@ class RealtimePlotting():
 		# set up the canvas to be given for ctk
 		self.canvas = FigureCanvasTkAgg(self.figure, master=self.frame)
 		self.canvas_widget = self.canvas.get_tk_widget()
-		self.canvas_widget.pack(fill=ctk.BOTH, expand=True)
+		self.canvas_widget.pack(fill="both", expand=True)
 
 		# create the animation using figure and update method
 		self.animation = FuncAnimation(self.figure, self.update, interval=self.t_k * 1000)
@@ -96,31 +97,56 @@ class RealtimePlotting():
 		# whether we want to collect data initially
 		self.collecting_data = True
 
+class InputPanel(ctk.CTkFrame):
+	"""
+	Contains the input widgets at the bottom of the window.
+	"""
+
+	def __init__(self, parent, animation):
+		# can give the frames properties here
+		super().__init__(master=parent, fg_color=INPUT_BG_COLOR, corner_radius=0)
+
+		# display
+		# fills to the left and right, and attaches to the bottom of the parent
+		self.pack(fill="both", side="bottom")
+
+		# WIDGETS
+
+		# buttons to start, stop and reset the animation
+		# placed at bottom right
+		ctk.CTkButton(self, text="RESET", command=animation.reset).pack(side="right", padx=10, pady=10)
+		ctk.CTkButton(self, text="STOP", command=animation.stop).pack(side="right", padx=10, pady=10)
+		ctk.CTkButton(self, text="START", command=animation.start).pack(side="right", padx=10, pady=10)
+
 class App(ctk.CTk):
-	'''
+	"""
 	Contains the window for the app.
-	'''
+	"""
 	def __init__(self):
 		# initialise with foreground color
-		super().__init__()
+		super().__init__(fg_color=BG_COLOR)
 
-		# WINDOW PROPERTIES
+		# define the window properties
 
-		self.title('')
-		self.geometry('900x800')
+		self.title("")
+		self.geometry("900x800")
 
 		self.protocol("WM_DELETE_WINDOW", self.quit)
 
+		# create the plotting frames
+
 		self.frame1 = ctk.CTkFrame(self)
-		self.frame1.pack(fill=ctk.BOTH, expand=True)
+		self.frame1.pack(fill="both", expand=True)
 		self.animation1 = RealtimePlotting(self.frame1)
 
 		self.frame2 = ctk.CTkFrame(self)
-		self.frame2.pack(fill=ctk.BOTH, expand=True)
+		self.frame2.pack(fill="both", expand=True)
 		self.animation2 = RealtimePlotting(self.frame2)
 
-		# MAIN LOOP
+		# the input panel
+		InputPanel(self, self.animation1)
 
+		# call main loop to run
 		self.mainloop()
 
 if __name__ == "__main__":
