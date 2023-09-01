@@ -16,25 +16,31 @@ class RealtimePlotting():
 		self.ts = np.array([0])
 		self.hs = np.array([self.h(0)])
 
+		# whether we want to collect data initially
+		self.collecting_data = True
+
+		# initial plotting parameters and variables
 		self.figure = plt.figure()
 		self.line, = plt.plot(self.ts, self.hs)
 
 	def update(self, frame):
 		"""
-		Called every frame of animation. Updates the figure and data.
+		Called every frame of animation. Updates the figure and data if needed.
 		"""
 
-		# set line data
-		self.line.set_data(self.ts, self.hs)
-		# rescale figure
-		self.figure.gca().relim()
-		self.figure.gca().autoscale_view()
+		# if we are collecting more data to plot
+		if self.collecting_data:
+			# set line data
+			self.line.set_data(self.ts, self.hs)
+			# rescale figure
+			self.figure.gca().relim()
+			self.figure.gca().autoscale_view()
 
-		# calculate current time
-		t = self.ts[-1] + self.t_k
-		# update the arrays
-		self.ts = np.append(self.ts, t)
-		self.hs = np.append(self.hs, self.h(t))
+			# calculate current time
+			t = self.ts[-1] + self.t_k
+			# update the arrays
+			self.ts = np.append(self.ts, t)
+			self.hs = np.append(self.hs, self.h(t))
 
 		# animation expects line
 		return self.line,
@@ -47,6 +53,32 @@ class RealtimePlotting():
 		animation = FuncAnimation(self.figure, self.update, interval=self.t_k * 1000)
 		# requires show call
 		plt.show()
+
+	def stop(self):
+		"""
+		Stops the updating of the array / time by adjusting the collecting_data variable.
+		"""
+
+		self.collecting_data = False
+
+	def start(self):
+		"""
+		Starts the updating of the array / time by adjusting the collecting_data variable.
+		"""
+
+		self.collecting_data = True
+
+	def reset(self):
+		"""
+		Resets arrays to initial values and starts collection.
+		"""
+
+		# initialise time and storing arrays
+		self.ts = np.array([0])
+		self.hs = np.array([self.h(0)])
+
+		# whether we want to collect data initially
+		self.collecting_data = True
 
 if __name__ == "__main__":
 	plot = RealtimePlotting()
