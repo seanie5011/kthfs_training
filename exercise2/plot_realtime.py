@@ -1,10 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import customtkinter as ctk
+
+# set to dark appearance mode
+# to use system default, set to 'system'
+ctk.set_appearance_mode("dark")
 
 # class to handle simulated realtime data and plotting
 class RealtimePlotting():
-	def __init__(self):
+	def __init__(self, frame):
+		# ctk frame to be used
+		self.frame = frame
+
 		# simulated realtime data function
 		self.x = lambda t: 5 * np.sin(2 * np.pi * t)
 		self.h = lambda t: 3 * np.pi * np.exp(-self.x(t))
@@ -23,7 +32,10 @@ class RealtimePlotting():
 		self.figure = plt.figure()
 		self.line, = plt.plot(self.ts, self.hs)
 
-	def update(self, frame):
+		# start the plotting animation
+		self.plot()
+
+	def update(self, i):
 		"""
 		Called every frame of animation. Updates the figure and data if needed.
 		"""
@@ -49,10 +61,14 @@ class RealtimePlotting():
 		"""
 		Calls the animation for realtime plotting.
 		"""
+
+		# set up the canvas to be given for ctk
+		self.canvas = FigureCanvasTkAgg(self.figure, master=self.frame)
+		self.canvas_widget = self.canvas.get_tk_widget()
+		self.canvas_widget.pack(fill=ctk.BOTH, expand=True)
+
 		# create the animation using figure and update method
-		animation = FuncAnimation(self.figure, self.update, interval=self.t_k * 1000)
-		# requires show call
-		plt.show()
+		self.animation = FuncAnimation(self.figure, self.update, interval=self.t_k * 1000)
 
 	def stop(self):
 		"""
@@ -80,6 +96,32 @@ class RealtimePlotting():
 		# whether we want to collect data initially
 		self.collecting_data = True
 
+class App(ctk.CTk):
+	'''
+	Contains the window for the app.
+	'''
+	def __init__(self):
+		# initialise with foreground color
+		super().__init__()
+
+		# WINDOW PROPERTIES
+
+		self.title('')
+		self.geometry('900x800')
+
+		self.protocol("WM_DELETE_WINDOW", self.quit)
+
+		self.frame1 = ctk.CTkFrame(self)
+		self.frame1.pack(fill=ctk.BOTH, expand=True)
+		self.animation1 = RealtimePlotting(self.frame1)
+
+		self.frame2 = ctk.CTkFrame(self)
+		self.frame2.pack(fill=ctk.BOTH, expand=True)
+		self.animation2 = RealtimePlotting(self.frame2)
+
+		# MAIN LOOP
+
+		self.mainloop()
+
 if __name__ == "__main__":
-	plot = RealtimePlotting()
-	plot.plot()
+    App()
