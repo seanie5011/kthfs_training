@@ -6,7 +6,7 @@ import customtkinter as ctk
 
 # class to handle simulated realtime data and plotting
 class RealtimePlotting():
-	def __init__(self, frame, row, column, figsize):
+	def __init__(self, frame, row, column, figsize, title):
 		# ctk frame to be used
 		self.frame = frame
 		self.row = row
@@ -29,12 +29,22 @@ class RealtimePlotting():
 		# whether to show the grid
 		self.use_grid = True
 
+		# the title of the plot
+		self.title = title
+
 		# initial plotting parameters and variables
 		self.fig, self.ax = plt.subplots(1, 1, figsize=figsize)
 		self.line, = self.ax.plot(self.ts, self.hs)
 
 		# start the plotting animation
 		self.plot()
+
+	def get_data(self):
+		"""
+		Returns the current data
+		"""
+
+		return self.ts, self.hs
 
 	def update(self, i):
 		"""
@@ -59,9 +69,6 @@ class RealtimePlotting():
 			self.ax.grid(True)
 		else:
 			self.ax.grid(False)
-
-		# animation expects line
-		return self.line,
 
 	def plot(self):
 		"""
@@ -115,3 +122,10 @@ class RealtimePlotting():
 		"""
 
 		self.use_grid = not self.use_grid
+
+	def set_title(self, title):
+		"""
+		Sets the title of the figure to the given string.
+		"""
+
+		self.fig.suptitle(title)
