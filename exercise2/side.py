@@ -25,3 +25,8 @@ class SidePanel(ctk.CTkFrame):
 		ctk.CTkLabel(self, textvariable=animation.ts_str).grid(row=5, column=0, padx=(40, 0), pady=(5, 20))
 
 		# label for period of data
+		ctk.CTkLabel(self, text="Period (per unit time):").grid(row=6, column=0, padx=(40, 0), pady=(20, 5))
+		ctk.CTkLabel(self, textvariable=animation.period_str).grid(row=7, column=0, padx=(40, 0), pady=(5, 20))
+
+		ctk.CTkLabel(self, text="Amplitude:").grid(row=8, column=0, padx=(40, 0), pady=(20, 5))
+		ctk.CTkLabel(self, textvariable=animation.amp_str).grid(row=9, column=0, padx=(40, 0), pady=(5, 20))

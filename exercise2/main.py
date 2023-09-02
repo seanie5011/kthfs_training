@@ -5,6 +5,10 @@ from bottom import BottomPanel
 from side import SidePanel
 from functools import partial
 
+# # suppress warnings (RELEASE MODE)
+# import warnings
+# warnings.filterwarnings("ignore")
+
 # set to dark appearance mode
 # to use system default, set to 'system'
 ctk.set_appearance_mode("dark")

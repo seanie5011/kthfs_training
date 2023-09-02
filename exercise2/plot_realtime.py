@@ -4,6 +4,7 @@ from matplotlib.animation import FuncAnimation
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import customtkinter as ctk
 import time
+from scipy.signal import find_peaks
 
 # class to handle simulated realtime data and plotting
 class RealtimePlotting():
@@ -35,6 +36,10 @@ class RealtimePlotting():
 
 		# a ctk string to keep track of the length of the timeseries
 		self.ts_str = ctk.StringVar(value=str(len(self.ts)))
+		# a ctk string to keep track of period of signal
+		self.period_str = ctk.StringVar(value=str(self.get_period()))
+		# a ctk string to keep track of amplitude of signal
+		self.amp_str = ctk.StringVar(value=str(self.get_amp()))
 
 		# initial plotting parameters and variables
 		self.fig, self.ax = plt.subplots(1, 1, figsize=figsize)
@@ -49,6 +54,27 @@ class RealtimePlotting():
 		"""
 
 		return self.ts, self.hs
+
+	def get_period(self):
+		"""
+		Returns the period of a signal by looking at peaks.
+		"""
+
+		try:
+			# Find peaks in the data using find_peaks
+			peaks, _ = find_peaks(self.hs)
+
+			# Calculate the differences between consecutive peaks to find the period
+			return np.mean(np.diff(self.ts[peaks]))
+		except:
+			return "nan"
+
+	def get_amp(self):
+		"""
+		Returns the amplitude of a signal.
+		"""
+
+		return np.max(self.hs) - np.min(self.hs)
 
 	def update(self, i):
 		"""
@@ -71,6 +97,8 @@ class RealtimePlotting():
 
 			# set ctk string
 			self.ts_str.set(str(len(self.ts)))
+			self.period_str.set(str(self.get_period()))
+			self.amp_str.set(str(self.get_amp()))
 
 		if self.use_grid:
 			self.ax.grid(True)
@@ -142,8 +170,6 @@ class RealtimePlotting():
 		Sets the title of the figure to the given string.
 		"""
 
-		print("yes")
-
 		# set title to new
 		self.title = title
 
@@ -156,7 +182,6 @@ class RealtimePlotting():
 		"""
 
 		if self.title == "":
-			print("start-", self.title, "-end")
 			return "experiment"
 		else:
 			return self.title
