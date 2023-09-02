@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import customtkinter as ctk
+import time
 
 # class to handle simulated realtime data and plotting
 class RealtimePlotting():
@@ -115,19 +116,19 @@ class RealtimePlotting():
 		# whether we want to collect data initially
 		self.collecting_data = True
 
-	def save_image(self, filename):
+	def save_image(self, extension):
 		"""
-		Saves the figure according to the filename (extension must be included).
+		Saves the figure according to the extension.
 		"""
 
-		self.fig.savefig(filename, bbox_inches="tight")
+		self.fig.savefig(f"{int(time.time())}_{self.get_title()}{extension}", bbox_inches="tight")
 
-	def save_data(self, filename):
+	def save_data(self, extension):
 		"""
 		Saves the data to a csv according to the filename (extension must be included).
 		"""
 
-		np.savetxt(filename, np.column_stack((self.ts, self.hs)), delimiter=",", fmt="%f")
+		np.savetxt(f"{int(time.time())}_{self.get_title()}{extension}", np.column_stack((self.ts, self.hs)), delimiter=",", fmt="%f")
 
 	def toggle_grid(self):
 		"""
@@ -141,6 +142,8 @@ class RealtimePlotting():
 		Sets the title of the figure to the given string.
 		"""
 
+		print("yes")
+
 		# set title to new
 		self.title = title
 
@@ -153,6 +156,7 @@ class RealtimePlotting():
 		"""
 
 		if self.title == "":
+			print("start-", self.title, "-end")
 			return "experiment"
 		else:
 			return self.title
