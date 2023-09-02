@@ -30,3 +30,5 @@ This project makes use of Python 3.10.11 and was developed on a Windows 10 machi
 A matplotlib plot is embedded in a customtkinter GUI. Many features of the plot can be accessed via the GUI. These consist of toggling of a grid, editing the title (don't forget to press return!), and saving the plot (either image or data file). The plot updates in realtime each timestep that the data is inputted. This can be stopped (and then started again), along with being reset. Further displayed is some analysis of the signal, using signal analysis with scipy methods.
 
 This project was created with an OOP approach. Different classes impact different sections of the app, such as the side panel, bottom panel, the plot (and analysis), and the main app running.
+
+![screenshot](https://github.com/seanie5011/kthfs_training/assets/72211395/e09eed61-afda-4baa-adde-3f77b5c6b207)
