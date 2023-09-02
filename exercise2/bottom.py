@@ -14,8 +14,10 @@ class BottomPanel(ctk.CTkFrame):
 
 		# button to toggle the grid
 		# placed at bottom left
-		ctk.CTkButton(self, text="TOGGLE GRID", command=animation.toggle_grid).grid(row=0, column=0, padx=(50, 10), pady=(15, 0))
+		ctk.CTkButton(self, text="TOGGLE GRID", command=animation.toggle_grid).grid(row=0, column=0, padx=(30, 10), pady=(15, 0))
 
+		# label for title
+		ctk.CTkLabel(self, text="Title:").grid(row=0, column=1, padx=(10, 0), pady=(15, 0))
 		# the entry field for the title
 		ctk.CTkEntry(
 			self, 
@@ -25,10 +27,10 @@ class BottomPanel(ctk.CTkFrame):
 			fg_color=BG_COLOR, 
 			border_color=TEXT_COLOR, 
 			border_width=1, 
-		).grid(row=0, column=1, padx=(10, 300), pady=(15, 0))
+		).grid(row=0, column=2, padx=(10, 320), pady=(15, 0))
 
 		# buttons to start, stop and reset the animation
 		# placed at bottom right
-		ctk.CTkButton(self, text="START", command=animation.start).grid(row=0, column=2, padx=10, pady=(15, 0))
-		ctk.CTkButton(self, text="STOP", command=animation.stop).grid(row=0, column=3, padx=10, pady=(15, 0))
-		ctk.CTkButton(self, text="RESET", command=animation.reset).grid(row=0, column=4, padx=10, pady=(15, 0))
+		ctk.CTkButton(self, text="START", command=animation.start).grid(row=0, column=3, padx=10, pady=(15, 0))
+		ctk.CTkButton(self, text="STOP", command=animation.stop).grid(row=0, column=4, padx=10, pady=(15, 0))
+		ctk.CTkButton(self, text="RESET", command=animation.reset).grid(row=0, column=5, padx=10, pady=(15, 0))

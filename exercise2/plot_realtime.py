@@ -32,6 +32,9 @@ class RealtimePlotting():
 		# the title of the plot
 		self.title = title
 
+		# a ctk string to keep track of the length of the timeseries
+		self.ts_str = ctk.StringVar(value=str(len(self.ts)))
+
 		# initial plotting parameters and variables
 		self.fig, self.ax = plt.subplots(1, 1, figsize=figsize)
 		self.line, = self.ax.plot(self.ts, self.hs)
@@ -64,6 +67,9 @@ class RealtimePlotting():
 			# update the arrays
 			self.ts = np.append(self.ts, t)
 			self.hs = np.append(self.hs, self.h(t))
+
+			# set ctk string
+			self.ts_str.set(str(len(self.ts)))
 
 		if self.use_grid:
 			self.ax.grid(True)
@@ -109,12 +115,19 @@ class RealtimePlotting():
 		# whether we want to collect data initially
 		self.collecting_data = True
 
-	def save(self, filename):
+	def save_image(self, filename):
 		"""
 		Saves the figure according to the filename (extension must be included).
 		"""
 
 		self.fig.savefig(filename, bbox_inches="tight")
+
+	def save_data(self, filename):
+		"""
+		Saves the data to a csv according to the filename (extension must be included).
+		"""
+
+		np.savetxt(filename, np.column_stack((self.ts, self.hs)), delimiter=",", fmt="%f")
 
 	def toggle_grid(self):
 		"""
@@ -128,4 +141,18 @@ class RealtimePlotting():
 		Sets the title of the figure to the given string.
 		"""
 
-		self.fig.suptitle(title)
+		# set title to new
+		self.title = title
+
+		# change title
+		self.fig.suptitle(self.title)
+
+	def get_title(self):
+		"""
+		Returns self.title or "experiment" if title empty.
+		"""
+
+		if self.title == "":
+			return "experiment"
+		else:
+			return self.title
