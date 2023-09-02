@@ -6,9 +6,11 @@ import customtkinter as ctk
 
 # class to handle simulated realtime data and plotting
 class RealtimePlotting():
-	def __init__(self, frame):
+	def __init__(self, frame, row, column, figsize):
 		# ctk frame to be used
 		self.frame = frame
+		self.row = row
+		self.column = column
 
 		# simulated realtime data function
 		self.x = lambda t: 5 * np.sin(2 * np.pi * t)
@@ -24,9 +26,12 @@ class RealtimePlotting():
 		# whether we want to collect data initially
 		self.collecting_data = True
 
+		# whether to show the grid
+		self.use_grid = True
+
 		# initial plotting parameters and variables
-		self.figure = plt.figure(figsize=(4, 3))
-		self.line, = plt.plot(self.ts, self.hs)
+		self.fig, self.ax = plt.subplots(1, 1, figsize=figsize)
+		self.line, = self.ax.plot(self.ts, self.hs)
 
 		# start the plotting animation
 		self.plot()
@@ -41,14 +46,19 @@ class RealtimePlotting():
 			# set line data
 			self.line.set_data(self.ts, self.hs)
 			# rescale figure
-			self.figure.gca().relim()
-			self.figure.gca().autoscale_view()
+			self.fig.gca().relim()
+			self.fig.gca().autoscale_view()
 
 			# calculate current time
 			t = self.ts[-1] + self.t_k
 			# update the arrays
 			self.ts = np.append(self.ts, t)
 			self.hs = np.append(self.hs, self.h(t))
+
+		if self.use_grid:
+			self.ax.grid(True)
+		else:
+			self.ax.grid(False)
 
 		# animation expects line
 		return self.line,
@@ -59,12 +69,12 @@ class RealtimePlotting():
 		"""
 
 		# set up the canvas to be given for ctk
-		self.canvas = FigureCanvasTkAgg(self.figure, master=self.frame)
+		self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
 		self.canvas_widget = self.canvas.get_tk_widget()
-		self.canvas_widget.pack(fill="both", expand=True)
+		self.canvas_widget.pack(fill="both", expand=True)#.grid(row=self.row, column=self.column)
 
 		# create the animation using figure and update method
-		self.animation = FuncAnimation(self.figure, self.update, interval=self.t_k * 1000)
+		self.animation = FuncAnimation(self.fig, self.update, interval=self.t_k * 1000)
 
 	def stop(self):
 		"""
@@ -91,3 +101,17 @@ class RealtimePlotting():
 
 		# whether we want to collect data initially
 		self.collecting_data = True
+
+	def save(self, filename):
+		"""
+		Saves the figure according to the filename (extension must be included).
+		"""
+
+		self.fig.savefig(filename, bbox_inches="tight")
+
+	def toggle_grid(self):
+		"""
+		Toggles the use_grid boolean.
+		"""
+
+		self.use_grid = not self.use_grid

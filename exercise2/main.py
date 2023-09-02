@@ -1,7 +1,8 @@
 import customtkinter as ctk
 from settings import *
 from plot_realtime import RealtimePlotting
-from input import InputPanel
+from bottom import BottomPanel
+from side import SidePanel
 
 # set to dark appearance mode
 # to use system default, set to 'system'
@@ -17,23 +18,28 @@ class App(ctk.CTk):
 
 		# define the window properties
 
-		self.title("")
-		self.geometry("900x800")
+		self.title("Visualisation GUI")
+		self.geometry("1440x810")
 
-		self.protocol("WM_DELETE_WINDOW", self.quit)
+		self.protocol("WM_DELETE_WINDOW", self.quit)  # makes sure quits without errors
+		self.resizable(False, False)  # not resizable
 
-		# create the plotting frames
+		# 2 rows, 3 columns
+		self.rowconfigure(0, weight=9)
+		self.rowconfigure(1, weight=1)
+		self.columnconfigure((0, 1), weight=1)
+
+		# create the plotting frame
 
 		self.frame1 = ctk.CTkFrame(self)
-		self.frame1.pack(fill="both", expand=True)
-		self.animation1 = RealtimePlotting(self.frame1)
+		self.frame1.grid(row=0, column=1, sticky="nsew")
+		self.animation1 = RealtimePlotting(self.frame1, 0, 0, (8, 6))
 
-		self.frame2 = ctk.CTkFrame(self)
-		self.frame2.pack(fill="both", expand=True)
-		self.animation2 = RealtimePlotting(self.frame2)
+		# the input panels
 
-		# the input panel
-		InputPanel(self, self.animation1)
+		BottomPanel(self, self.animation1).grid(row=1, column=1, sticky="nsew")
+
+		SidePanel(self, self.animation1).grid(row=0, column=0, rowspan=2, sticky="nsew")
 
 		# call main loop to run
 		self.mainloop()
