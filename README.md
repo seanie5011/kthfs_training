@@ -4,7 +4,21 @@ This repository contains my attempts at the exercises detailed in the KTH Formul
 
 ## exercise1
 
-TODO.
+This project uses ROS Melodic Morenia, tested on an Ubuntu 18.04 machine. Steps were taken to also install *catkin tools*. When run successfully, a publisher sends a string of the current timestamp at $10 \, \mathrm{Hz}$ intervals to the `chatter` topic, while a subscriber receieves these messages. The publisher and subscriber are in the `broadcast` and `receiver` packages respectively.
+
+### Installation and running
+
+1. Create a new directory (eg: `kthfsdv`) by: `mkdir -p ~/kthfsdv/src`.
+2. Enter the project directory: `cd ~/kthfsdv/` and run `catkin build`.
+4. Clone the contents of this repos `excercise1` directory into the `src/` directory.
+5. Open a terminal and `cd src/exc1/broadcast/` and run `chmod +x talker.py` to make this python file executable.
+6. Repeat with `cd src/exc1/receiver/` and run `chmod +x listener.py`.
+7. Then `cd ~/kthfsdv/ and run `catkin build`.
+8. Initialise the master with `roscore`.
+9. In a new terminal at the same level, navigate into the environment with `source ./devel/setup.bash`.
+10. Run `rosrun broadcast talker.py` and observe output.
+11. In another new terminal, repeat steps 9-10 instead running `rosrun receiver listener.py` and observe output.
+
 
 ## exercise2
 
