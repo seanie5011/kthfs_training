@@ -13,7 +13,7 @@ This project uses ROS Melodic Morenia, tested on an Ubuntu 18.04 machine. Steps 
 4. Clone the contents of this repos `excercise1` directory into the `src/` directory.
 5. Open a terminal and `cd src/exc1/broadcast/` and run `chmod +x talker.py` to make this python file executable.
 6. Repeat with `cd src/exc1/receiver/` and run `chmod +x listener.py`.
-7. Then `cd ~/kthfsdv/ and run `catkin build`.
+7. Then `cd ~/kthfsdv/` and run `catkin build`.
 8. Initialise the master with `roscore`.
 9. In a new terminal at the same level, navigate into the environment with `source ./devel/setup.bash`.
 10. Run `rosrun broadcast talker.py` and observe output.
